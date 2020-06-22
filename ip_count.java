@@ -5,13 +5,19 @@ import java.util.BitSet;
      public static void main(String[] args) throws IOException {
 	 
 	 	String filename = args.length < 1 ? "ip_list.txt": args[0];
-		final int start=100; // Максимум 256 уменьшить если не хватит памяти 
-	    final int end=256; // Максимум 256 уменьшить если не хватит памяти 
+        String MemoryError = args.length < 2 ? "0": args[1];
+
 		Integer counter=0; //Кол-во уникальных ip
 		
-//		counter =ip_count_range(filename,0,256);	
-		counter =ip_count_range(filename,  0,128);
-		counter+=ip_count_range(filename,129,256);	
+		
+    // Exception in thread "main" java.lang.OutOfMemoryError: GC overhead limit exceeded
+    // Если не хватает памяти сканируем файл 2 раза
+        if(MemoryError!="0"){
+            counter =ip_count_range(filename,  0,128);
+            counter+=ip_count_range(filename,129,256);                        	
+        }else    
+            counter =ip_count_range(filename,0,256);
+		
 		
 		System.err.println("In all: "+counter+" unique ip-address in the file" );
 //		System.err.println("Error line: "+counter_error+"" );
@@ -34,14 +40,14 @@ import java.util.BitSet;
             String line;
 			String[] s;
             for (int n = 1; (line = reader.readLine()) != null; ++n) {
-			    if(n % 10==0) System.out.println(n + ": rows processed  "); //наблюдаем прогресс каждые 100 строк
+			    if(n % 100==0) System.out.println(n + ": rows processed  "); //наблюдаем прогресс каждые 100 строк
 				
 				s = line.split("[.]+"); //разбиваем строки в массив строк
 				if(s.length<4){System.out.println(n +": skip '"+line+"'"); counter_error++; continue;}
-				x=Integer.valueOf(s[0]); //1-ое число ip x.y.z.t
-				y=Integer.valueOf(s[1]); //2-ое
-				z=Integer.valueOf(s[2]); //3-ое
-				t=Integer.valueOf(s[3]); //4-ое
+				x=Integer.valueOf(s[0].trim()); //1-ое число ip x.y.z.t
+				y=Integer.valueOf(s[1].trim()); //2-ое
+				z=Integer.valueOf(s[2].trim()); //3-ое
+				t=Integer.valueOf(s[3].trim()); //4-ое
 				
 //				if(x<start||x>end) System.err.println(n +": skip '"+line+"'");
 				if(x<start||x>end) continue;
@@ -57,10 +63,10 @@ import java.util.BitSet;
 	}
 	//проверям ip 
 	public static boolean ckip(Integer x, Integer y, Integer z, Integer t) {
-		if(x<1|x>256) return false;
-		if(y<1|y>256) return false;
-		if(z<1|z>256) return false;
-		if(t<1|t>256) return false;
+		if(x<0|x>256) return false;
+		if(y<0|y>256) return false;
+		if(z<0|z>256) return false;
+		if(t<0|t>256) return false;
 		return true;
 	}
  }
