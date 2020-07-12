@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.BitSet;
 
-//Memory 888476 KiB. 8000000000 rows processed. 1000000000 unique ip-address. 1083740 ms
+//Memory 888476 KiB. 8000000000 rows processed. 1000000000 unique ip-address. 1083740 ms.
  public class ip_count{
      public static void main(String[] args) throws IOException {
 
